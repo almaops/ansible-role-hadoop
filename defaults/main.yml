@@ -8,7 +8,6 @@ hadoop_user: "hadoop"
 hadoop_user_shell: "/usr/sbin/nologin"
 hadoop_download_url_base: "https://archive.apache.org/dist/hadoop/common"
 hadoop_download_url_file: "{{ hadoop_download_url_base }}/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz"
-hadoop_download_checksum: "sha512:{{ hadoop_download_url_base }}/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz.sha512"
 
 # Path settings
 hadoop_path_base: "/opt"

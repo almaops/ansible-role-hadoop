@@ -11,6 +11,16 @@
     group: "{{ hadoop_group }}"
     state: present
 
+- name: "{{ hadoop_task_prefix }} Download checksum"
+  ansible.builtin.uri:
+    url: "{{ hadoop_download_url_file }}.sha512"
+    return_content: true
+  register: hadoop_download_checksum_raw
+
+- name: "{{ hadoop_task_prefix }} Download tarball"
+  ansible.builtin.set_fact:
+    hadoop_download_checksum: "{{ hadoop_download_checksum_raw.content.split(' = ')[1] }}"
+
 - name: "{{ hadoop_task_prefix }} Download tarball"
   ansible.builtin.get_url:
     url: "{{ hadoop_download_url_file }}"

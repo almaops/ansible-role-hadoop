@@ -33,9 +33,9 @@
     dest: "{{ hadoop_path_base }}"
     remote_src: true
 
-- name: "{{ hadoop_task_prefix }} Unpack tarball"
-  ansible.builtin.unarchive:
-    src: "{{ hadoop_path_tarball }}"
-    dest: "{{ zookeeper_path_base }}"
+- name: "{{ hadoop_task_prefix }} Copy binaries"
+  ansible.builtin.copy:
+    src: "{{ hadoop_path_unpacked }}"
+    dest: "{{ hadoop_path_install }}"
     remote_src: true
 ...

@@ -25,7 +25,7 @@
   ansible.builtin.get_url:
     url: "{{ hadoop_download_url_file }}"
     dest: "{{ hadoop_path_tarball }}"
-    checksum: "{{ hadoop_download_checksum }}"
+    checksum: "sha512:{{ hadoop_download_checksum }}"
 
 - name: "{{ hadoop_task_prefix }} Unpack tarball"
   ansible.builtin.unarchive:

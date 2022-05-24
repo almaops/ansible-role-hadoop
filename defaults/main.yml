@@ -12,4 +12,6 @@ hadoop_download_url_file: "{{ hadoop_download_url_base }}/hadoop-{{ hadoop_versi
 # Path settings
 hadoop_path_base: "/opt"
 hadoop_path_tarball: "{{ hadoop_path_base }}/hadoop-{{ hadoop_version }}.tar.gz"
+hadoop_path_unpacked: "{{ hadoop_path_base }}/hadoop-{{ hadoop_version }}"
+hadoop_path_install: "{{ hadoop_path_base }}/hadoop"
 ...

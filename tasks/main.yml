@@ -17,7 +17,7 @@
     return_content: true
   register: hadoop_download_checksum_raw
 
-- name: "{{ hadoop_task_prefix }} Download tarball"
+- name: "{{ hadoop_task_prefix }} Extract checksum"
   ansible.builtin.set_fact:
     hadoop_download_checksum: "{{ hadoop_download_checksum_raw.content.split(' = ')[1] }}"
 

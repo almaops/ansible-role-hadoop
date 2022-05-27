@@ -138,9 +138,9 @@
     daemon_reload: "{{ hadoop_systemd_journalnode_daemon_reload | bool }}"
     state: "{{ hadoop_systemd_journalnode_state }}"
 
-- name: "{{ hadoop_task_prefix }} Create namemode directory"
+- name: "{{ hadoop_task_prefix }} Create namenode directory"
   file:
-    path: "{{ hadoop_path_data_namemode }}"
+    path: "{{ hadoop_path_data_namenode }}"
     state: directory
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
@@ -149,7 +149,7 @@
 
 - name: "{{ hadoop_task_prefix }} Check current subdir in namenode dir"
   stat:
-    path: "{{ hadoop_path_data_namemode }}/current"
+    path: "{{ hadoop_path_data_namenode }}/current"
   register: hadoop_namenode_current
 
 - name: "{{ hadoop_task_prefix }} Set formatted flag to false"

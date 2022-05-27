@@ -44,16 +44,12 @@
 
   <property>
     <name>dfs.datanode.data.dir</name>
-    <value>{% for dir in hadoop_path_datanode_datadirs -%}
-	    {{ dir }}{{ ',' if not loop.last else '' }}
-             {%- endfor %}</value>
+    <value>{{ hadoop_path_data_datanode }}</value>
   </property>
 
   <property>
     <name>dfs.namenode.name.dir</name>
-    <value>{% for dir in hadoop_path_namenode_namedirs -%}
-	    {{ dir }}{{ ',' if not loop.last else '' }}
-             {%- endfor %}</value>
+    <value>{{ hadoop_path_data_namenode }}</value>
   </property>
 
   <property>

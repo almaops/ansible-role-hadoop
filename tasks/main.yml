@@ -42,6 +42,7 @@
 - name: "{{ hadoop_task_prefix }} Create data directory"
   file:
     path: "{{ hadoop_path_data }}"
+    state: directory
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: '0755'

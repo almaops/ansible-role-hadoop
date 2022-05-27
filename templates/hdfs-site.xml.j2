@@ -16,11 +16,11 @@
 {% for nn in groups[hadoop_hosts_namenode] %}
   <property>
     <name>dfs.namenode.rpc-address.{{ hadoop_conf_nameservice_id }}.{{ hostvars[nn].namenode_id }}</name>
-    <value>{{ hostvars[nn].backnet_ip }}:{{ hadoop_bind_port_namemode_rpc }}</value>
+    <value>{{ hostvars[nn].backnet_ip }}:{{ hadoop_bind_port_namenode_rpc }}</value>
   </property>
   <property>
     <name>dfs.namenode.http-address.{{ hadoop_conf_nameservice_id }}.{{ hostvars[nn].namenode_id }}</name>
-    <value>{{ hostvars[nn].backnet_ip }}:{{ hadoop_bind_port_namemode_http }}</value>
+    <value>{{ hostvars[nn].backnet_ip }}:{{ hadoop_bind_port_namenode_http }}</value>
   </property>
 {% endfor %}
 

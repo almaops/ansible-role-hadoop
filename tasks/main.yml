@@ -13,7 +13,7 @@
 
 - name: "{{ hadoop_task_prefix }} Download checksum"
   ansible.builtin.uri:
-    url: "{{ hadoop_download_url_file }}.sha512"
+    url: "{{ hadoop_download_url_checksum }}"
     return_content: true
   register: hadoop_download_checksum_raw
 
@@ -25,7 +25,7 @@
   ansible.builtin.get_url:
     url: "{{ hadoop_download_url_file }}"
     dest: "{{ hadoop_path_tarball }}"
-    checksum: "sha512:{{ hadoop_download_checksum }}"
+    checksum: "{{ hadoop_download_checksum_algo }}:{{ hadoop_download_checksum }}"
 
 - name: "{{ hadoop_task_prefix }} Unpack tarball"
   ansible.builtin.unarchive:
@@ -38,4 +38,68 @@
     src: "{{ hadoop_path_unpacked }}"
     dest: "{{ hadoop_path_install }}"
     remote_src: true
+
+- name: "{{ hadoop_task_prefix }} Create data directory"
+  file:
+    path: "{{ hadoop_path_data }}"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: '0755'
+
+- name: "{{ hadoop_task_prefix }} Template exclusion list"
+  template:
+    src: "{{ hadoop_template_exclusion_list }}"
+    dest: "{{ hadoop_path_data }}/exclusion-list"
+    owner: root
+    group: root
+    mode: '0644'
+  #notify: hadoop_handler_refresh_nodes
+
+- name: "{{ hadoop_task_prefix }} Template core-site.xml"
+  template:
+    src: "{{ hadoop_template_core_site_xml }}"
+    dest: "{{ hadoop_path_config }}/core-site.xml"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Template hdfs-site.xml"
+  template:
+    src: "{{ hadoop_template_hdfs_site_xml }}"
+    dest: "{{ hadoop_path_config }}/hdfs-site.xml"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Template hadoop-env.sh"
+  template:
+    src: "{{ hadoop_template_hadoop_env_sh }}"
+    dest: "{{ hadoop_path_config }}/hadoop-env.sh"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Template yarn-env.sh"
+  template:
+    src: "{{ hadoop_template_yarn_env_sh }}"
+    dest: "{{ hadoop_path_config }}/yarn-env.sh"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Template yarn-site.xml"
+  template:
+    src: "{{ hadoop_template_yarn_site_xml }}"
+    dest: "{{ hadoop_path_config }}/yarn-site.xml"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Template mapred-site.xml"
+  template:
+    src: "{{ hadoop_template_mapred_site_xml }}"
+    dest: "{{ hadoop_path_config }}/mapred-site.xml"
+    owner: root
+    group: root
+    mode: '0644'
 ...

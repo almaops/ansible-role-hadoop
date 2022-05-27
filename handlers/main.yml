@@ -1,0 +1,5 @@
+---
+- name: hadoop_handler_refresh_nodes
+  command: sudo -u {{ hadoop_user }} {{ hadoop_path_install }}/bin/hdfs dfsadmin -refreshNodes
+  ignore_errors: true
+...

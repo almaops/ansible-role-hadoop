@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+  <property>
+    <name>dfs.nameservices</name>
+    <value>{{ hadoop_conf_nameservice_id }}</value>
+  </property>
+
+  <property>
+    <name>dfs.ha.namenodes.{{ hadoop_conf_nameservice_id }}</name>
+    <value>{% for nn in groups[hadoop_hosts_namenode] %}{{ hostvars[nn].namenode_id }}{% if not loop.last %},{% endif %}{% endfor %}</value>
+  </property>
+{% for nn in groups[hadoop_hosts_namenode] %}
+  <property>
+    <name>dfs.namenode.rpc-address.{{ hadoop_conf_nameservice_id }}.{{ hostvars[nn].namenode_id }}</name>
+    <value>{{ hostvars[nn].backnet_ip }}:{{ hadoop_bind_port_namemode_rpc }}</value>
+  </property>
+  <property>
+    <name>dfs.namenode.http-address.{{ hadoop_conf_nameservice_id }}.{{ hostvars[nn].namenode_id }}</name>
+    <value>{{ hostvars[nn].backnet_ip }}:{{ hadoop_bind_port_namemode_http }}</value>
+  </property>
+{% endfor %}
+
+  <property>
+    <name>dfs.datanode.address</name>
+    <value>{{ hadoop_bind_addr_datanode }}:{{ hadoop_bind_port_datanode }}</value>
+  </property>
+  <property>
+    <name>dfs.datanode.ipc.address</name>
+    <value>{{ hadoop_bind_addr_datanode }}:{{ hadoop_bind_port_datanode_ipc }}</value>
+  </property>
+  <property>
+    <name>dfs.datanode.http.address</name>
+    <value>{{ hadoop_bind_addr_datanode }}:{{ hadoop_bind_port_datanode_http }}</value>
+  </property>
+
+  <property>
+    <name>dfs.namenode.shared.edits.dir</name>
+    <value>qjournal://{% for jn in groups[hadoop_hosts_journalnode] %}{{ hostvars[jn].backnet_ip }}:{{ hadoop_bind_port_journalnode_rpc }}{% if not loop.last %};{% endif %}{% endfor %}/{{ hadoop_conf_nameservice_id }}</value>
+  </property>
+
+  <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>{% for dir in hadoop_path_datanode_datadirs -%}
+	    {{ dir }}{{ ',' if not loop.last else '' }}
+             {%- endfor %}</value>
+  </property>
+
+  <property>
+    <name>dfs.namenode.name.dir</name>
+    <value>{% for dir in hadoop_path_namenode_namedirs -%}
+	    {{ dir }}{{ ',' if not loop.last else '' }}
+             {%- endfor %}</value>
+  </property>
+
+  <property>
+    <name>dfs.client.failover.proxy.provider.{{ hadoop_conf_nameservice_id }}</name>
+    <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+  </property>
+
+  <property>
+    <name>dfs.ha.fencing.methods</name>
+    <value>shell(/bin/true)</value>
+  </property>
+
+  <property>
+    <name>dfs.journalnode.edits.dir</name>
+    <value>{{ hadoop_path_data }}/jnedits</value>
+  </property>
+
+  <property>
+    <name>dfs.ha.automatic-failover.enabled</name>
+    <value>true</value>
+  </property>
+
+  <!-- Enable durable sync -->
+  <property>
+    <name>dfs.support.append</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>dfs.domain.socket.path</name>
+    <value>{{ hadoop_path_data }}/dn_socket</value>
+  </property>
+  <property>
+    <name>dfs.client.read.shortcircuit</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>ha.zookeeper.quorum</name>
+    <value>{{ hadoop_conf_zookeeper_quorum }}</value>
+  </property>
+
+  <property>
+    <name>dfs.journalnode.rpc-address</name>
+    <value>{{ hadoop_bind_addr_journalnode }}:{{ hadoop_bind_port_journalnode_rpc }}</value>
+  </property>
+
+  <property>
+    <name>dfs.journalnode.http-address</name>
+    <value>{{ hadoop_bind_addr_journalnode }}:{{ hadoop_bind_port_journalnode_http }}</value>
+  </property>
+
+  <property>
+    <name>nfs.superuser</name>
+    <value>{{ hadoop_user }}</value>
+  </property>
+
+  <property>
+    <name>dfs.namenode.accesstime.precision</name>
+    <value>3600000</value>
+    <!--
+    <description>The access time for HDFS file is precise upto this value.
+      The default value is 1 hour. Setting a value of 0 disables
+      access times for HDFS.
+    </description>
+    -->
+  </property>
+
+  <property>
+    <name>nfs.dump.dir</name>
+    <value>/tmp/.hdfs-nfs</value>
+  </property>
+
+  <property>
+    <name>nfs.exports.allowed.hosts</name>
+    <value>* rw</value>
+  </property>
+
+  <property>
+    <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
+    <value>false</value>
+  </property>
+
+  <property>
+    <name>dfs.blocksize</name>
+    <value>{{ hadoop_conf_dfs_blocksize }}</value>
+  </property>
+
+  <property>
+    <name>dfs.replication</name>
+    <value>{{ hadoop_conf_dfs_replication }}</value>
+  </property>
+
+  <property>
+    <name>dfs.datanode.balance.max.concurrent.moves</name>
+    <value>{{ hadoop_conf_dfs_datanode_balance_max_concurrent_moves }}</value>
+  </property>
+</configuration>

@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  author: AUTHORNAME
-  description: Ansible role does ...
-  role_name: ROLENAME
+  author: Valentin Gostev
+  description: Ansible role deploys Apache Hadoop cluster
+  role_name: hadoop
   namespace: almaops
   license: MIT
   min_ansible_version: 2.10
@@ -14,6 +14,8 @@ galaxy_info:
       versions:
         - all
   galaxy_tags:
-    - todo
+    - hadoop
+    - hdfs
+    - hbase
 dependencies: []
 ...

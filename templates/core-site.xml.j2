@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://{{ hadoop_conf_nameservice_id }}</value>
+  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>{{ hadoop_path_data }}</value>
+  </property>
+  <property>
+    <name>dfs.hosts.exclude</name>
+    <value>{{ hadoop_path_data }}/exclusion-list</value>
+  </property>
+  <property>
+    <name>dfs.block.local-path-access.user</name>
+    <value>{{ hadoop_user }}</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.{{ hadoop_user }}.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.{{ hadoop_user }}.groups</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.registry.zk.quorum</name>
+    <value>{{ hadoop_conf_zookeeper_quorum }}</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.nfsserver.groups</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.nfsserver.hosts</name>
+    <value>*</value>
+  </property>
+</configuration>

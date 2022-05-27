@@ -8,10 +8,77 @@ hadoop_user: "hadoop"
 hadoop_user_shell: "/usr/sbin/nologin"
 hadoop_download_url_base: "https://archive.apache.org/dist/hadoop/common"
 hadoop_download_url_file: "{{ hadoop_download_url_base }}/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz"
+hadoop_download_url_checksum: "{{ hadoop_download_url_file }}.sha512"
+hadoop_download_checksum_algo: "sha512"
+
+# Host groups
+# Specific hosts
+hadoop_host_jobhistory: "{{ undef(hint='You must set the jobhistory host') }}"
+hadoop_host_yarn_resourcemanager: "{{ undef(hint='You must set the yarn resource manager host') }}"
+# The name of group in Ansible inventory, that contains
+hadoop_hosts_namenode: "{{ undef(hint='You must set the group name of namenodes') }}"
+hadoop_hosts_journalnode: "{{ undef(hint='You must set the group name of journalnodes') }}"
+
+# Network settings
+hadoop_bind_port_namenode_rpc: "8020"
+hadoop_bind_port_namenode_http: "50070"
+
+hadoop_bind_addr_datanode: "0.0.0.0"
+hadoop_bind_port_datanode: "50010"
+hadoop_bind_port_datanode_ipc: "50020"
+hadoop_bind_port_datanode_http: "50075"
+
+hadoop_bind_addr_journalnode: "0.0.0.0"
+hadoop_bind_port_journalnode_rpc: "8485"
+hadoop_bind_port_journalnode_http: "8480"
+
+hadoop_bind_port_jobhistory_ipc: "10001"
+hadoop_bind_port_jobhistory_webui: "10002"
+hadoop_bind_port_jobhistory_admin: "10003"
+
+# Yarn resource manager port bindings
+hadoop_bind_port_yarn_rm_resourcetracker: "8031"
+hadoop_bind_port_yarn_rm: "8032"
+hadoop_bind_port_yarn_rm_scheduler: "8030"
+hadoop_bind_port_yarn_rm_webapp: "8088"
+hadoop_bind_port_yarn_rm_admin: "8033"
+
+# Yarn node manager port bindings
+hadoop_bind_port_yarn_nm_localizer: "8040"
+hadoop_bind_port_yarn_nm_webapp: "8042"
+hadoop_bind_port_yarn_nm: "8041"
+
+# Templates
+hadoop_template_core_site_xml: "core-site.xml.j2"
+hadoop_template_exclusion_list: "exclusion-list.j2"
+hadoop_template_hdfs_site_xml: "hdfs-site.xml.j2"
+hadoop_template_hadoop_env_sh: "hadoop-env.sh.j2"
+hadoop_template_yarn_env_sh: "yarn-env.sh.j2"
+hadoop_template_yarn_site_xml: "yarn-site.xml.j2"
+hadoop_template_mapred_site_xml: "mapred-site.xml.j2"
 
 # Path settings
 hadoop_path_base: "/opt"
 hadoop_path_tarball: "{{ hadoop_path_base }}/hadoop-{{ hadoop_version }}.tar.gz"
 hadoop_path_unpacked: "{{ hadoop_path_base }}/hadoop-{{ hadoop_version }}/"
 hadoop_path_install: "{{ hadoop_path_base }}/hadoop"
+hadoop_path_config: "{{ hadoop_path_install }}/etc/hadoop"
+hadoop_path_data: "/srv/hadoop"
+hadoop_path_java_home: "{{ undef(hint='You must define $JAVA_HOME path') }}"
+hadoop_path_datanode_datadirs:
+  - "{{ hadoop_path_data }}/dfs/data"
+hadoop_path_namenode_namedirs:
+  - "{{ hadoop_path_data }}/dfs/name"
+
+# Configuration settings
+hadoop_conf_nameservice_id: "sample"
+hadoop_conf_exclusion_list: []
+hadoop_conf_zookeeper_quorum: "{{ undef(hint='You must set zookeeper ip addresses') }}"
+hadoop_conf_dfs_blocksize: "134217728"
+hadoop_conf_dfs_replication: "3"
+hadoop_conf_dfs_datanode_balance_max_concurrent_moves: "20"
+
+# Environment variables
+hadoop_env_hadoop_heapsize: "2048"
+
 ...

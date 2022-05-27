@@ -1,0 +1,14 @@
+[Unit]
+Description=HDFS Journalnode Service
+
+[Service]
+Type=simple
+User={{ hadoop_user }}
+Group={{ hadoop_user }}
+ExecStart={{ hadoop_path_install }}/bin/hdfs journalnode
+StandardOutput=journal
+StandardError=journal
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

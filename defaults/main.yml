@@ -58,6 +58,10 @@ hadoop_template_hadoop_env_sh: "hadoop-env.sh.j2"
 hadoop_template_yarn_env_sh: "yarn-env.sh.j2"
 hadoop_template_yarn_site_xml: "yarn-site.xml.j2"
 hadoop_template_mapred_site_xml: "mapred-site.xml.j2"
+hadoop_template_journalnode_service: "hdfs-journalnode.service.j2"
+
+# SystemD units
+hadoop_systemd_journalnode: "hdfs-journalnode"
 
 # Path settings
 hadoop_path_base: "/opt"
@@ -71,6 +75,9 @@ hadoop_path_datanode_datadirs:
   - "{{ hadoop_path_data }}/dfs/data"
 hadoop_path_namenode_namedirs:
   - "{{ hadoop_path_data }}/dfs/name"
+hadoop_path_data_journalnode: "{{ hadoop_path_data }}/jnedits"
+
+hadoop_path_systemd_journalnode: "/etc/systemd/system/{{ hadoop_systemd_journalnode }}.service"
 
 # Configuration settings
 hadoop_conf_nameservice_id: "sample"

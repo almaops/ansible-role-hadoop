@@ -48,6 +48,8 @@ hadoop_bind_port_yarn_nm_localizer: "8040"
 hadoop_bind_port_yarn_nm_webapp: "8042"
 hadoop_bind_port_yarn_nm: "8041"
 
+hadoop_bind_port_yarn_shuffle: "13000"
+
 # Templates
 hadoop_template_core_site_xml: "core-site.xml.j2"
 hadoop_template_exclusion_list: "exclusion-list.j2"

@@ -106,6 +106,14 @@
     group: root
     mode: '0644'
 
+- name: "{{ hadoop_task_prefix }} Create log directory"
+  file:
+    path: "{{ hadoop_path_log }}"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: '0755'
+
 - name: "{{ hadoop_task_prefix }} Create journalnode directory"
   file:
     path: "{{ hadoop_path_data_journalnode }}"

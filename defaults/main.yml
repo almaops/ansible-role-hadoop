@@ -84,7 +84,7 @@ hadoop_path_log: "{{ hadoop_path_install }}/logs"
 hadoop_path_java_home: "{{ undef(hint='You must define $JAVA_HOME path') }}"
 hadoop_path_data: "/srv/hadoop"
 hadoop_path_data_datanode: "{{ hadoop_path_data }}/dfs/data"
-hadoop_path_data_namemode: "{{ hadoop_path_data }}/dfs/name"
+hadoop_path_data_namenode: "{{ hadoop_path_data }}/dfs/name"
 hadoop_path_data_journalnode: "{{ hadoop_path_data }}/jnedits"
 
 hadoop_path_systemd_journalnode: "/etc/systemd/system/{{ hadoop_systemd_journalnode }}.service"

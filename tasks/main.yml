@@ -132,9 +132,55 @@
 
 - name: "{{ hadoop_task_prefix }} Start journalnode service"
   systemd:
-    name: "{{ hadoop_systemd_journalnode }}"
-    enabled: true
-    masked: false
-    daemon_reload: true
-    state: started
+    name: "{{ hadoop_systemd_journalnode_name }}"
+    enabled: "{{ hadoop_systemd_journalnode_enabled | bool }}"
+    masked: "{{ hadoop_systemd_journalnode_masked | bool }}"
+    daemon_reload: "{{ hadoop_systemd_journalnode_daemon_reload | bool }}"
+    state: "{{ hadoop_systemd_journalnode_state }}"
+
+- name: "{{ hadoop_task_prefix }} Create namemode directory"
+  file:
+    path: "{{ hadoop_path_data_namemode }}"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: '0755'
+    recurse: true
+
+- name: "{{ hadoop_task_prefix }} Check current subdir in namenode dir"
+  stat:
+    path: "{{ hadoop_path_data_namemode }}/current"
+  register: hadoop_namenode_current
+
+- name: "{{ hadoop_task_prefix }} Set formatted flag to false"
+  set_fact:
+    hadoop_namenode_formatted: false
+
+- name: "{{ hadoop_task_prefix }} Check if namenode is formatted"
+  set_fact:
+    hadoop_namenode_formatted: "{{ hadoop_namenode_current.stat.isdir }}"
+  when: hadoop_namenode_current.stat.isdir is defined
+
+- name: "{{ hadoop_task_prefix }} Format namenode"
+  become: true
+  become_user: "{{ hadoop_user }}"
+  shell: "{{ hadoop_path_install }}/bin/hdfs namenode -format"
+  when: not hadoop_namenode_formatted
+  run_once: true
+
+- name: "{{ hadoop_task_prefix }} Install namenode service unit"
+  template:
+    src: "{{ hadoop_template_namenode_service }}"
+    dest: "{{ hadoop_path_systemd_namenode }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Start namenode service"
+  systemd:
+    name: "{{ hadoop_systemd_namenode_name }}"
+    enabled: "{{ hadoop_systemd_namenode_enabled | bool }}"
+    masked: "{{ hadoop_systemd_namenode_masked | bool }}"
+    daemon_reload: "{{ hadoop_systemd_namenode_daemon_reload | bool }}"
+    state: "{{ hadoop_systemd_namenode_state }}"
 ...

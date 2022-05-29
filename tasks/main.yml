@@ -152,14 +152,18 @@
     path: "{{ hadoop_path_data_namenode }}/current"
   register: hadoop_namenode_current
 
+- name: "{{ hadoop_task_prefix }} Check if current subdir exists"
+  set_fact:
+    hadoop_namenode_current_exists: "{{ hadoop_namenode_current.stat.isdir is defined and hadoop_namenode_current.stat.isdir }}"
+
 - name: "{{ hadoop_task_prefix }} Set formatted flag to false"
   set_fact:
     hadoop_namenode_formatted: false
 
 - name: "{{ hadoop_task_prefix }} Check if namenode is formatted"
   set_fact:
-    hadoop_namenode_formatted: "{{ hadoop_namenode_current.stat.isdir }}"
-  when: hadoop_namenode_current.stat.isdir is defined
+    hadoop_namenode_formatted: "{{ hadoop_namenode_formatted or hostvars[item]['hadoop_namenode_current_exists'] }}"
+  loop: "{{ groups[hadoop_hosts_namenode] }}"
 
 - name: "{{ hadoop_task_prefix }} Format namenode"
   become: true

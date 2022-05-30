@@ -182,6 +182,14 @@
     hadoop_namenode_formatted: "{{ hadoop_namenode_current.stat.isdir }}"
   when: hadoop_namenode_current.stat.isdir is defined
 
+- name: "{{ hadoop_task_prefix }} Install namenode service unit"
+  template:
+    src: "{{ hadoop_template_namenode_service }}"
+    dest: "{{ hadoop_path_systemd_namenode }}"
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: "{{ hadoop_task_prefix }} Start first namenode"
   systemd:
     name: "{{ hadoop_systemd_namenode_name }}"
@@ -197,15 +205,7 @@
   shell: "{{ hadoop_path_install }}/bin/hdfs namenode -bootstrapStandby -force"
   when: not hadoop_namenode_formatted
 
-- name: "{{ hadoop_task_prefix }} Install namenode service unit"
-  template:
-    src: "{{ hadoop_template_namenode_service }}"
-    dest: "{{ hadoop_path_systemd_namenode }}"
-    owner: root
-    group: root
-    mode: '0644'
-
-- name: "{{ hadoop_task_prefix }} Start namenode service"
+- name: "{{ hadoop_task_prefix }} Start remaining namenodes"
   systemd:
     name: "{{ hadoop_systemd_namenode_name }}"
     enabled: "{{ hadoop_systemd_namenode_enabled | bool }}"

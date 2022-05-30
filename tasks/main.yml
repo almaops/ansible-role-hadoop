@@ -1,14 +1,26 @@
 ---
-- name: "{{ hadoop_task_prefix }} Create group"
+- name: "{{ hadoop_task_prefix }} Create hadoop group"
   ansible.builtin.group:
     name: "{{ hadoop_group }}"
     state: present
 
-- name: "{{ hadoop_task_prefix }} Create user"
+- name: "{{ hadoop_task_prefix }} Create hadoop user"
   ansible.builtin.user:
     name: "{{ hadoop_user }}"
     shell: "{{ hadoop_user_shell }}"
     group: "{{ hadoop_group }}"
+    state: present
+
+- name: "{{ hadoop_task_prefix }} Create yarn group"
+  ansible.builtin.group:
+    name: "{{ yarn_group }}"
+    state: present
+
+- name: "{{ hadoop_task_prefix }} Create yarn user"
+  ansible.builtin.user:
+    name: "{{ yarn_user }}"
+    shell: "{{ yarn_user_shell }}"
+    group: "{{ yarn_group }}"
     state: present
 
 - name: "{{ hadoop_task_prefix }} Download checksum"
@@ -282,4 +294,28 @@
     daemon_reload: "{{ hadoop_systemd_yarnrm_daemon_reload | bool }}"
     state: "{{ hadoop_systemd_yarnrm_state }}"
   when: inventory_hostname == hadoop_host_yarn_resourcemanager
+
+- name: "{{ hadoop_task_prefix }} Create Yarn NM log dir"
+  ansible.builtin.file:
+    path: "{{ hadoop_path_log_yarn }}"
+    state: directory
+    owner: "{{ yarn_user }}"
+    group: "{{ yarn_group }}"
+    mode: '0755'
+
+- name: "{{ hadoop_task_prefix }} Install Yarn node manager service unit"
+  template:
+    src: "{{ hadoop_template_yarnnm_service }}"
+    dest: "{{ hadoop_path_systemd_yarnnm }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Start Yarn node manager service"
+  systemd:
+    name: "{{ hadoop_systemd_yarnnm_name }}"
+    enabled: "{{ hadoop_systemd_yarnnm_enabled | bool }}"
+    masked: "{{ hadoop_systemd_yarnnm_masked | bool }}"
+    daemon_reload: "{{ hadoop_systemd_yarnnm_daemon_reload | bool }}"
+    state: "{{ hadoop_systemd_yarnnm_state }}"
 ...

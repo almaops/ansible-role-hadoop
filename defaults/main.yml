@@ -6,6 +6,9 @@ hadoop_version: "3.3.3"
 hadoop_group: "hadoop"
 hadoop_user: "hadoop"
 hadoop_user_shell: "/usr/sbin/nologin"
+yarn_user: "yarn"
+yarn_group: "{{ hadoop_group }}"
+yarn_user_shell: "{{ hadoop_user_shell }}"
 hadoop_download_url_base: "https://archive.apache.org/dist/hadoop/common"
 hadoop_download_url_file: "{{ hadoop_download_url_base }}/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz"
 hadoop_download_url_checksum: "{{ hadoop_download_url_file }}.sha512"
@@ -64,6 +67,7 @@ hadoop_template_namenode_service: "hdfs-namenode.service.j2"
 hadoop_template_zkfc_service: "hdfs-zkfc.service.j2"
 hadoop_template_datanode_service: "hdfs-datanode.service.j2"
 hadoop_template_yarnrm_service: "yarn-rm.service.j2"
+hadoop_template_yarnnm_service: "yarn-nm.service.j2"
 
 # SystemD units
 hadoop_systemd_journalnode_name: "hdfs-journalnode"
@@ -96,6 +100,12 @@ hadoop_systemd_yarnrm_masked: false
 hadoop_systemd_yarnrm_state: "started"
 hadoop_systemd_yarnrm_daemon_reload: true
 
+hadoop_systemd_yarnnm_name: "yarn-nm"
+hadoop_systemd_yarnnm_enabled: true
+hadoop_systemd_yarnnm_masked: false
+hadoop_systemd_yarnnm_state: "started"
+hadoop_systemd_yarnnm_daemon_reload: true
+
 # Path settings
 hadoop_path_base: "/opt"
 hadoop_path_tarball: "{{ hadoop_path_base }}/hadoop-{{ hadoop_version }}.tar.gz"
@@ -103,6 +113,7 @@ hadoop_path_unpacked: "{{ hadoop_path_base }}/hadoop-{{ hadoop_version }}/"
 hadoop_path_install: "{{ hadoop_path_base }}/hadoop"
 hadoop_path_config: "{{ hadoop_path_install }}/etc/hadoop"
 hadoop_path_log: "{{ hadoop_path_install }}/logs"
+hadoop_path_log_yarn: "{{ hadoop_path_log }}/userlogs"
 hadoop_path_java_home: "{{ undef(hint='You must define $JAVA_HOME path') }}"
 hadoop_path_zkcli: "/opt/zookeeper/bin/zkCli.sh"
 hadoop_path_data: "/srv/hadoop"
@@ -115,6 +126,7 @@ hadoop_path_systemd_namenode: "/etc/systemd/system/{{ hadoop_systemd_namenode_na
 hadoop_path_systemd_zkfc: "/etc/systemd/system/{{ hadoop_systemd_zkfc_name }}.service"
 hadoop_path_systemd_datanode: "/etc/systemd/system/{{ hadoop_systemd_datanode_name }}.service"
 hadoop_path_systemd_yarnrm: "/etc/systemd/system/{{ hadoop_systemd_yarnrm_name }}.service"
+hadoop_path_systemd_yarnnm: "/etc/systemd/system/{{ hadoop_systemd_yarnnm_name }}.service"
 
 # Configuration settings
 hadoop_conf_nameservice_id: "sample"

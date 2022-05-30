@@ -18,6 +18,7 @@ hadoop_host_yarn_resourcemanager: "{{ undef(hint='You must set the yarn resource
 # Specific groups from Ansible inventory
 hadoop_hosts_namenode: "{{ undef(hint='You must set the group name of namenodes') }}"
 hadoop_hosts_journalnode: "{{ undef(hint='You must set the group name of journalnodes') }}"
+hadoop_hosts_zookeeper: "{{ undef(hint='You must set the group name of zookeeper') }}"
 
 # Network settings
 hadoop_bind_port_namenode_rpc: "8020"
@@ -60,6 +61,7 @@ hadoop_template_yarn_site_xml: "yarn-site.xml.j2"
 hadoop_template_mapred_site_xml: "mapred-site.xml.j2"
 hadoop_template_journalnode_service: "hdfs-journalnode.service.j2"
 hadoop_template_namenode_service: "hdfs-namenode.service.j2"
+hadoop_template_zkfc_service: "hdfs-zkfc.service.j2"
 
 # SystemD units
 hadoop_systemd_journalnode_name: "hdfs-journalnode"
@@ -74,6 +76,12 @@ hadoop_systemd_namenode_masked: false
 hadoop_systemd_namenode_state: "started"
 hadoop_systemd_namenode_daemon_reload: true
 
+hadoop_systemd_zkfc_name: "hdfs-zkfc"
+hadoop_systemd_zkfc_enabled: true
+hadoop_systemd_zkfc_masked: false
+hadoop_systemd_zkfc_state: "started"
+hadoop_systemd_zkfc_daemon_reload: true
+
 # Path settings
 hadoop_path_base: "/opt"
 hadoop_path_tarball: "{{ hadoop_path_base }}/hadoop-{{ hadoop_version }}.tar.gz"
@@ -82,6 +90,7 @@ hadoop_path_install: "{{ hadoop_path_base }}/hadoop"
 hadoop_path_config: "{{ hadoop_path_install }}/etc/hadoop"
 hadoop_path_log: "{{ hadoop_path_install }}/logs"
 hadoop_path_java_home: "{{ undef(hint='You must define $JAVA_HOME path') }}"
+hadoop_path_zkcli: "/opt/zookeeper/bin/zkCli.sh"
 hadoop_path_data: "/srv/hadoop"
 hadoop_path_data_datanode: "{{ hadoop_path_data }}/dfs/data"
 hadoop_path_data_namenode: "{{ hadoop_path_data }}/dfs/name"
@@ -89,6 +98,7 @@ hadoop_path_data_journalnode: "{{ hadoop_path_data }}/jnedits"
 
 hadoop_path_systemd_journalnode: "/etc/systemd/system/{{ hadoop_systemd_journalnode_name }}.service"
 hadoop_path_systemd_namenode: "/etc/systemd/system/{{ hadoop_systemd_namenode_name }}.service"
+hadoop_path_systemd_zkfc: "/etc/systemd/system/{{ hadoop_systemd_namenode_name }}.service"
 
 # Configuration settings
 hadoop_conf_nameservice_id: "sample"

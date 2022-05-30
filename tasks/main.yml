@@ -212,4 +212,31 @@
     masked: "{{ hadoop_systemd_namenode_masked | bool }}"
     daemon_reload: "{{ hadoop_systemd_namenode_daemon_reload | bool }}"
     state: "{{ hadoop_systemd_namenode_state }}"
+
+- block:
+    - name: "{{ hadoop_task_prefix }} Check if ZooKeeper is formatted"
+      shell: "{{ hadoop_path_zkcli }} -server {{ backnet_ip }} ls /hadoop-ha/{{ hadoop_conf_nameservice_id }}"
+      register: hadoop_zk_output
+      ignore_errors: true
+    
+    - name: "{{ hadoop_task_prefix }} Format ZooKeeper"
+      shell: "{{ hadoop_path_install }}/bin/hdfs zkfc -formatZK"
+      when: "'does not exist' in hadoop_zk_output.stderr"
+  run_once: true
+
+- name: "{{ hadoop_task_prefix }} Install ZKFC service unit"
+  template:
+    src: "{{ hadoop_template_zkfc_service }}"
+    dest: "{{ hadoop_path_systemd_zkfc }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Start ZKFC service"
+  systemd:
+    name: "{{ hadoop_systemd_zkfc_name }}"
+    enabled: "{{ hadoop_systemd_zkfc_enabled | bool }}"
+    masked: "{{ hadoop_systemd_zkfc_masked | bool }}"
+    daemon_reload: "{{ hadoop_systemd_zkfc_daemon_reload | bool }}"
+    state: "{{ hadoop_systemd_zkfc_state }}"
 ...

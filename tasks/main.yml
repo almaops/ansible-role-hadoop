@@ -299,8 +299,8 @@
   ansible.builtin.file:
     path: "{{ hadoop_path_log_yarn }}"
     state: directory
-    owner: "{{ hadoop_user }}"
-    group: "{{ hadoop_group }}"
+    owner: "{{ yarn_user }}"
+    group: "{{ yarn_group }}"
     mode: '0755'
 
 - name: "{{ hadoop_task_prefix }} Install Yarn node manager service unit"

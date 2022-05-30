@@ -62,6 +62,7 @@ hadoop_template_mapred_site_xml: "mapred-site.xml.j2"
 hadoop_template_journalnode_service: "hdfs-journalnode.service.j2"
 hadoop_template_namenode_service: "hdfs-namenode.service.j2"
 hadoop_template_zkfc_service: "hdfs-zkfc.service.j2"
+hadoop_template_datanode_service: "hdfs-datanode.service.j2"
 
 # SystemD units
 hadoop_systemd_journalnode_name: "hdfs-journalnode"
@@ -81,6 +82,12 @@ hadoop_systemd_zkfc_enabled: true
 hadoop_systemd_zkfc_masked: false
 hadoop_systemd_zkfc_state: "started"
 hadoop_systemd_zkfc_daemon_reload: true
+
+hadoop_systemd_datanode_name: "hdfs-datanode"
+hadoop_systemd_datanode_enabled: true
+hadoop_systemd_datanode_masked: false
+hadoop_systemd_datanode_state: "started"
+hadoop_systemd_datanode_daemon_reload: true
 
 # Path settings
 hadoop_path_base: "/opt"

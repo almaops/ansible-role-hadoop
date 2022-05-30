@@ -239,4 +239,29 @@
     masked: "{{ hadoop_systemd_zkfc_masked | bool }}"
     daemon_reload: "{{ hadoop_systemd_zkfc_daemon_reload | bool }}"
     state: "{{ hadoop_systemd_zkfc_state }}"
+
+- name: "{{ hadoop_task_prefix }} Create datanode directory"
+  file:
+    path: "{{ hadoop_path_data_datanode }}"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: '0755'
+    recurse: true
+
+- name: "{{ hadoop_task_prefix }} Install datanode service unit"
+  template:
+    src: "{{ hadoop_template_datanode_service }}"
+    dest: "{{ hadoop_path_systemd_datanode }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Start datanode service"
+  systemd:
+    name: "{{ hadoop_systemd_datanode_name }}"
+    enabled: "{{ hadoop_systemd_datanode_enabled | bool }}"
+    masked: "{{ hadoop_systemd_datanode_masked | bool }}"
+    daemon_reload: "{{ hadoop_systemd_datanode_daemon_reload | bool }}"
+    state: "{{ hadoop_systemd_datanode_state }}"
 ...

@@ -106,6 +106,7 @@ hadoop_path_data_journalnode: "{{ hadoop_path_data }}/jnedits"
 hadoop_path_systemd_journalnode: "/etc/systemd/system/{{ hadoop_systemd_journalnode_name }}.service"
 hadoop_path_systemd_namenode: "/etc/systemd/system/{{ hadoop_systemd_namenode_name }}.service"
 hadoop_path_systemd_zkfc: "/etc/systemd/system/{{ hadoop_systemd_zkfc_name }}.service"
+hadoop_path_systemd_datanode: "/etc/systemd/system/{{ hadoop_systemd_datanode_name }}.service"
 
 # Configuration settings
 hadoop_conf_nameservice_id: "sample"

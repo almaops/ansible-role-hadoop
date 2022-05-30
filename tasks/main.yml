@@ -272,6 +272,7 @@
     owner: root
     group: root
     mode: '0644'
+  when: inventory_hostname == hadoop_host_yarn_resourcemanager
 
 - name: "{{ hadoop_task_prefix }} Start Yarn resource manager service"
   systemd:
@@ -280,4 +281,5 @@
     masked: "{{ hadoop_systemd_yarnrm_masked | bool }}"
     daemon_reload: "{{ hadoop_systemd_yarnrm_daemon_reload | bool }}"
     state: "{{ hadoop_systemd_yarnrm_state }}"
+  when: inventory_hostname == hadoop_host_yarn_resourcemanager
 ...

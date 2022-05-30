@@ -62,6 +62,7 @@ hadoop_template_mapred_site_xml: "mapred-site.xml.j2"
 hadoop_template_journalnode_service: "hdfs-journalnode.service.j2"
 hadoop_template_namenode_service: "hdfs-namenode.service.j2"
 hadoop_template_zkfc_service: "hdfs-zkfc.service.j2"
+hadoop_template_datanode_service: "hdfs-datanode.service.j2"
 hadoop_template_yarnrm_service: "yarn-rm.service.j2"
 
 # SystemD units

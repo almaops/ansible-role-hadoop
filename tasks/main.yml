@@ -264,4 +264,20 @@
     masked: "{{ hadoop_systemd_datanode_masked | bool }}"
     daemon_reload: "{{ hadoop_systemd_datanode_daemon_reload | bool }}"
     state: "{{ hadoop_systemd_datanode_state }}"
+
+- name: "{{ hadoop_task_prefix }} Install Yarn resource manager service unit"
+  template:
+    src: "{{ hadoop_template_yarnrm_service }}"
+    dest: "{{ hadoop_path_systemd_yarnrm }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "{{ hadoop_task_prefix }} Start Yarn resource manager service"
+  systemd:
+    name: "{{ hadoop_systemd_yarnrm_name }}"
+    enabled: "{{ hadoop_systemd_yarnrm_enabled | bool }}"
+    masked: "{{ hadoop_systemd_yarnrm_masked | bool }}"
+    daemon_reload: "{{ hadoop_systemd_yarnrm_daemon_reload | bool }}"
+    state: "{{ hadoop_systemd_yarnrm_state }}"
 ...

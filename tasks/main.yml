@@ -152,9 +152,26 @@
     path: "{{ hadoop_path_data_namenode }}/current"
   register: hadoop_namenode_current
 
-- name: "{{ hadoop_task_prefix }} Check if current subdir exists"
+- name: "{{ hadoop_task_prefix }} Set formatted flag to false"
   set_fact:
-    hadoop_namenode_current_exists: "{{ hadoop_namenode_current.stat.isdir is defined and hadoop_namenode_current.stat.isdir }}"
+    hadoop_namenode_formatted: false
+
+- name: "{{ hadoop_task_prefix }} Check if namenode is formatted"
+  set_fact:
+    hadoop_namenode_formatted: "{{ hadoop_namenode_current.stat.isdir }}"
+  when: hadoop_namenode_current.stat.isdir is defined
+
+- name: "{{ hadoop_task_prefix }} Format first namenode"
+  become: true
+  become_user: "{{ hadoop_user }}"
+  shell: "{{ hadoop_path_install }}/bin/hdfs namenode -format"
+  when: not hadoop_namenode_formatted
+  run_once: true
+
+- name: "{{ hadoop_task_prefix }} Check current subdir in namenode dir"
+  stat:
+    path: "{{ hadoop_path_data_namenode }}/current"
+  register: hadoop_namenode_current
 
 - name: "{{ hadoop_task_prefix }} Set formatted flag to false"
   set_fact:
@@ -162,15 +179,23 @@
 
 - name: "{{ hadoop_task_prefix }} Check if namenode is formatted"
   set_fact:
-    hadoop_namenode_formatted: "{{ hadoop_namenode_formatted or hostvars[item]['hadoop_namenode_current_exists'] }}"
-  loop: "{{ groups[hadoop_hosts_namenode] }}"
+    hadoop_namenode_formatted: "{{ hadoop_namenode_current.stat.isdir }}"
+  when: hadoop_namenode_current.stat.isdir is defined
 
-- name: "{{ hadoop_task_prefix }} Format namenode"
+- name: "{{ hadoop_task_prefix }} Start first namenode"
+  systemd:
+    name: "{{ hadoop_systemd_namenode_name }}"
+    enabled: "{{ hadoop_systemd_namenode_enabled | bool }}"
+    masked: "{{ hadoop_systemd_namenode_masked | bool }}"
+    daemon_reload: "{{ hadoop_systemd_namenode_daemon_reload | bool }}"
+    state: "{{ hadoop_systemd_namenode_state }}"
+  when: hadoop_namenode_formatted
+
+- name: "{{ hadoop_task_prefix }} Format remaining namenode"
   become: true
   become_user: "{{ hadoop_user }}"
-  shell: "{{ hadoop_path_install }}/bin/hdfs namenode -format"
+  shell: "{{ hadoop_path_install }}/bin/hdfs namenode -bootstrapStandby -force"
   when: not hadoop_namenode_formatted
-  run_once: true
 
 - name: "{{ hadoop_task_prefix }} Install namenode service unit"
   template:

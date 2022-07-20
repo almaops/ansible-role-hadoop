@@ -54,7 +54,7 @@
     force: false
 
 - name: "{{ hadoop_task_prefix }} Create data directory"
-  file:
+  ansible.builtin.file:
     path: "{{ hadoop_path_data }}"
     state: directory
     owner: "{{ hadoop_user }}"
@@ -62,7 +62,7 @@
     mode: '0755'
 
 - name: "{{ hadoop_task_prefix }} Template exclusion list"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_exclusion_list }}"
     dest: "{{ hadoop_path_data }}/exclusion-list"
     owner: root
@@ -71,7 +71,7 @@
   #notify: hadoop_handler_refresh_nodes
 
 - name: "{{ hadoop_task_prefix }} Template core-site.xml"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_core_site_xml }}"
     dest: "{{ hadoop_path_config }}/core-site.xml"
     owner: root
@@ -79,7 +79,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Template hdfs-site.xml"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_hdfs_site_xml }}"
     dest: "{{ hadoop_path_config }}/hdfs-site.xml"
     owner: root
@@ -87,7 +87,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Template hadoop-env.sh"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_hadoop_env_sh }}"
     dest: "{{ hadoop_path_config }}/hadoop-env.sh"
     owner: root
@@ -95,7 +95,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Template yarn-env.sh"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_yarn_env_sh }}"
     dest: "{{ hadoop_path_config }}/yarn-env.sh"
     owner: root
@@ -103,7 +103,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Template yarn-site.xml"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_yarn_site_xml }}"
     dest: "{{ hadoop_path_config }}/yarn-site.xml"
     owner: root
@@ -111,7 +111,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Template mapred-site.xml"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_mapred_site_xml }}"
     dest: "{{ hadoop_path_config }}/mapred-site.xml"
     owner: root
@@ -119,7 +119,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Create log directory"
-  file:
+  ansible.builtin.file:
     path: "{{ hadoop_path_log }}"
     state: directory
     owner: "{{ hadoop_user }}"
@@ -127,7 +127,7 @@
     mode: '0775'
 
 - name: "{{ hadoop_task_prefix }} Create journalnode directory"
-  file:
+  ansible.builtin.file:
     path: "{{ hadoop_path_data_journalnode }}"
     state: directory
     owner: "{{ hadoop_user }}"
@@ -135,7 +135,7 @@
     mode: '0755'
 
 - name: "{{ hadoop_task_prefix }} Install journalnode service unit"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_journalnode_service }}"
     dest: "{{ hadoop_path_systemd_journalnode }}"
     owner: root
@@ -143,7 +143,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Start journalnode service"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ hadoop_systemd_journalnode_name }}"
     enabled: "{{ hadoop_systemd_journalnode_enabled | bool }}"
     masked: "{{ hadoop_systemd_journalnode_masked | bool }}"
@@ -151,7 +151,7 @@
     state: "{{ hadoop_systemd_journalnode_state }}"
 
 - name: "{{ hadoop_task_prefix }} Create namenode directory"
-  file:
+  ansible.builtin.file:
     path: "{{ hadoop_path_data_namenode }}"
     state: directory
     owner: "{{ hadoop_user }}"
@@ -160,42 +160,42 @@
     recurse: true
 
 - name: "{{ hadoop_task_prefix }} Check current subdir in namenode dir"
-  stat:
+  ansible.builtin.stat:
     path: "{{ hadoop_path_data_namenode }}/current"
   register: hadoop_namenode_current
 
 - name: "{{ hadoop_task_prefix }} Set formatted flag to false"
-  set_fact:
+  ansible.builtin.set_fact:
     hadoop_namenode_formatted: false
 
 - name: "{{ hadoop_task_prefix }} Check if namenode is formatted"
-  set_fact:
+  ansible.builtin.set_fact:
     hadoop_namenode_formatted: "{{ hadoop_namenode_current.stat.isdir }}"
   when: hadoop_namenode_current.stat.isdir is defined
 
 - name: "{{ hadoop_task_prefix }} Format first namenode"
+  ansible.builtin.shell: "{{ hadoop_path_install }}/bin/hdfs namenode -format"
   become: true
   become_user: "{{ hadoop_user }}"
-  shell: "{{ hadoop_path_install }}/bin/hdfs namenode -format"
   when: not hadoop_namenode_formatted
   run_once: true
 
 - name: "{{ hadoop_task_prefix }} Check current subdir in namenode dir"
-  stat:
+  ansible.builtin.stat:
     path: "{{ hadoop_path_data_namenode }}/current"
   register: hadoop_namenode_current
 
 - name: "{{ hadoop_task_prefix }} Set formatted flag to false"
-  set_fact:
+  ansible.builtin.set_fact:
     hadoop_namenode_formatted: false
 
 - name: "{{ hadoop_task_prefix }} Check if namenode is formatted"
-  set_fact:
+  ansible.builtin.set_fact:
     hadoop_namenode_formatted: "{{ hadoop_namenode_current.stat.isdir }}"
   when: hadoop_namenode_current.stat.isdir is defined
 
 - name: "{{ hadoop_task_prefix }} Install namenode service unit"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_namenode_service }}"
     dest: "{{ hadoop_path_systemd_namenode }}"
     owner: root
@@ -203,7 +203,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Start first namenode"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ hadoop_systemd_namenode_name }}"
     enabled: "{{ hadoop_systemd_namenode_enabled | bool }}"
     masked: "{{ hadoop_systemd_namenode_masked | bool }}"
@@ -212,13 +212,13 @@
   when: hadoop_namenode_formatted
 
 - name: "{{ hadoop_task_prefix }} Format remaining namenode"
+  ansible.builtin.shell: "{{ hadoop_path_install }}/bin/hdfs namenode -bootstrapStandby -force"
   become: true
   become_user: "{{ hadoop_user }}"
-  shell: "{{ hadoop_path_install }}/bin/hdfs namenode -bootstrapStandby -force"
   when: not hadoop_namenode_formatted
 
 - name: "{{ hadoop_task_prefix }} Start remaining namenodes"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ hadoop_systemd_namenode_name }}"
     enabled: "{{ hadoop_systemd_namenode_enabled | bool }}"
     masked: "{{ hadoop_systemd_namenode_masked | bool }}"
@@ -227,17 +227,17 @@
 
 - block:
     - name: "{{ hadoop_task_prefix }} Check if ZooKeeper is formatted"
-      shell: "{{ hadoop_path_zkcli }} -server {{ backnet_ip }} ls /hadoop-ha/{{ hadoop_conf_nameservice_id }}"
+      ansible.builtin.shell: "{{ hadoop_path_zkcli }} -server {{ backnet_ip }} ls /hadoop-ha/{{ hadoop_conf_nameservice_id }}"
       register: hadoop_zk_output
       ignore_errors: true
     
     - name: "{{ hadoop_task_prefix }} Format ZooKeeper"
-      shell: "{{ hadoop_path_install }}/bin/hdfs zkfc -formatZK"
+      ansible.builtin.shell: "{{ hadoop_path_install }}/bin/hdfs zkfc -formatZK"
       when: "'does not exist' in hadoop_zk_output.stderr"
   run_once: true
 
 - name: "{{ hadoop_task_prefix }} Install ZKFC service unit"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_zkfc_service }}"
     dest: "{{ hadoop_path_systemd_zkfc }}"
     owner: root
@@ -245,7 +245,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Start ZKFC service"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ hadoop_systemd_zkfc_name }}"
     enabled: "{{ hadoop_systemd_zkfc_enabled | bool }}"
     masked: "{{ hadoop_systemd_zkfc_masked | bool }}"
@@ -253,7 +253,7 @@
     state: "{{ hadoop_systemd_zkfc_state }}"
 
 - name: "{{ hadoop_task_prefix }} Create datanode directory"
-  file:
+  ansible.builtin.file:
     path: "{{ hadoop_path_data_datanode }}"
     state: directory
     owner: "{{ hadoop_user }}"
@@ -262,7 +262,7 @@
     recurse: true
 
 - name: "{{ hadoop_task_prefix }} Install datanode service unit"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_datanode_service }}"
     dest: "{{ hadoop_path_systemd_datanode }}"
     owner: root
@@ -270,7 +270,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Start datanode service"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ hadoop_systemd_datanode_name }}"
     enabled: "{{ hadoop_systemd_datanode_enabled | bool }}"
     masked: "{{ hadoop_systemd_datanode_masked | bool }}"
@@ -278,7 +278,7 @@
     state: "{{ hadoop_systemd_datanode_state }}"
 
 - name: "{{ hadoop_task_prefix }} Install Yarn resource manager service unit"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_yarnrm_service }}"
     dest: "{{ hadoop_path_systemd_yarnrm }}"
     owner: root
@@ -287,7 +287,7 @@
   when: inventory_hostname == hadoop_host_yarn_resourcemanager
 
 - name: "{{ hadoop_task_prefix }} Start Yarn resource manager service"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ hadoop_systemd_yarnrm_name }}"
     enabled: "{{ hadoop_systemd_yarnrm_enabled | bool }}"
     masked: "{{ hadoop_systemd_yarnrm_masked | bool }}"
@@ -304,7 +304,7 @@
     mode: '0755'
 
 - name: "{{ hadoop_task_prefix }} Install Yarn node manager service unit"
-  template:
+  ansible.builtin.template:
     src: "{{ hadoop_template_yarnnm_service }}"
     dest: "{{ hadoop_path_systemd_yarnnm }}"
     owner: root
@@ -312,7 +312,7 @@
     mode: '0644'
 
 - name: "{{ hadoop_task_prefix }} Start Yarn node manager service"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ hadoop_systemd_yarnnm_name }}"
     enabled: "{{ hadoop_systemd_yarnnm_enabled | bool }}"
     masked: "{{ hadoop_systemd_yarnnm_masked | bool }}"

@@ -118,6 +118,14 @@
     group: root
     mode: '0644'
 
+- name: "{{ hadoop_task_prefix }} Template container-executor.cfg"
+  ansible.builtin.template:
+    src: "{{ hadoop_template_container_executor_cfg }}"
+    dest: "{{ hadoop_path_config }}/container-executor.cfg"
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: "{{ hadoop_task_prefix }} Create log directory"
   ansible.builtin.file:
     path: "{{ hadoop_path_log }}"

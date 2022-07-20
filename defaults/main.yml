@@ -68,6 +68,7 @@ hadoop_template_zkfc_service: "hdfs-zkfc.service.j2"
 hadoop_template_datanode_service: "hdfs-datanode.service.j2"
 hadoop_template_yarnrm_service: "yarn-rm.service.j2"
 hadoop_template_yarnnm_service: "yarn-nm.service.j2"
+hadoop_template_container_executor_cfg: "container-executor.cfg.j2"
 
 # SystemD units
 hadoop_systemd_journalnode_name: "hdfs-journalnode"
